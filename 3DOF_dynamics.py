@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
-
 import numpy as np
 from numpy import sin, cos, tan
 
@@ -19,10 +13,3 @@ def __entry_3dof(self, x, t, u, D, L, omega):
     dgamma = L*cos(sigma)/m*v + cos(gamma)*((v**2-g*r)/r*v) + 2*omega*sin(psi)*cos(phi) + omega**2*r*cos(phi)*(cos(phi)*cos(gamma)+sin(phi)*sin(psi)*sin(gamma)) 
     dpsi = L*sin(sigma)/m*v*cos(gamma) - v*cos(gamma)*cos(psi)*tan(phi)/r + 2*omega*(tan(gamma)*cos(phi)*sin(psi)-sin(phi)) - omega**2*r*sin(phi)*cos(phi)*cos(psi)/cos(gamma)
     return np.array([dr, dtheta, dphi, dv, dgamma, dpsi])
-
-
-# In[ ]:
-
-
-
-
