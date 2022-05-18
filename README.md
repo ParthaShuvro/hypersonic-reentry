@@ -8,6 +8,6 @@ Aerodynamic coefficient taken from CAV-H basic data, same goes for the BC
 
 isacalc package (https://github.com/LukeDeWaal/ISA_Calculator.git) dependency for earth atmosphere parameters
 
-In entry dynamics could not define the control input u and thrust_3dof
+In entry dynamics, could not define the control input u and thrust_3dof
 
-This code refers a good amount work from the EDLpy(https://github.com/CDNoyes/EDL-Py.git) library
+This code refers a good amount of work from the EDLpy(https://github.com/CDNoyes/EDL-Py.git) library
