@@ -9,4 +9,4 @@ isacalc package (https://github.com/LukeDeWaal/ISA_Calculator.git) dependency fo
 
 This code refers a good amount of work from the EDLpy(https://github.com/CDNoyes/EDL-Py.git) library
 
- Other dependency plbrain (https://github.com/pybrain/pybrain.git)
+ Other dependency pybrain (https://github.com/pybrain/pybrain.git)
