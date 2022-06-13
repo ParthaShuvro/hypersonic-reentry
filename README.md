@@ -1,7 +1,6 @@
 # hypersonic-reentry
-<under development
-Trajectory optimization of hypersonic reentry vehicle>
-
+<Trajectory optimization of hypersonic reentry vehicle>
+status: Under development
 Entry vehicle: need to put real value for cav thrust, ISP  
 
 Aerodynamic coefficient taken from CAV-H basic data, same goes for the BC
