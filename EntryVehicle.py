@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
-
-import Control
+import numpy as np
+from numpy import sin, cos, tan
+from Planet import Planet
+import math
 class EntryVehicle(object):
     
     '''
@@ -19,15 +21,26 @@ class EntryVehicle(object):
         BC(mass, Mach) - computes the vehicle's ballistic coefficient as a function of its mass. Drag coefficient is calculated by default at Mach 24.
     '''
 
-    def __init__(self, area=0.4839, mass=907.2):
+    def __init__(self, area=0.4839, mass=907.2, PlanetModel=Planet('Earth')):
         # need to put real value for cav thrust, ISP
+        import numpy as np
+
+        self.planet = PlanetModel
         self.area = area
         self.mass = mass
         self.g0 = 9.81
+        self.dist_scale = self.planet.radius
+        self.acc_scale = self.planet.mu/(self.dist_scale**2)
+        self.time_scale = np.sqrt(self.dist_scale/self.acc_scale)
+        self.vel_scale = np.sqrt(self.dist_scale*self.acc_scale)
+        self.mass_scale = 1
 
     def aerodynamic_coefficients(self, M, alpha):
-        self.M = self.Control.mach()
-        self.alpha = self.Control.alpha()
+        r, theta, phi, v, gamma, psi = self.HRVEnv.state
+        h = (r - self.planet.radius)/self.dist_scale
+        rho, a = self.planet.atmosphere(h*self.dist_scale)
+        self.M = self.v*self.vel_scale/a
+        self.alpha = self.HRVEnv.action[0]
         from math import exp
         """ Returns aero coefficients CD and CL. Supports ndarray Mach numbers. """
         [cl0, cl1, cl2, cl3] = [-0.2317, 0.0513, 0.2945, -0.1028]
@@ -45,4 +58,10 @@ class EntryVehicle(object):
         
         bc = mass/(self.cD*area)
         return bc
+
+
+# In[ ]:
+
+
+
 

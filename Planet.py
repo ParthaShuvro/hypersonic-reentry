@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
-
+import numpy as np
 import isacalc as isa
 atmos = isa.get_atmosphere
 
@@ -78,4 +78,10 @@ class Planet:
     def updateMG(date=[10,29,2018], latitude=0, longitude=0, dustTau=0, rpscale=0):
         ''' Calls MG '''
         return
+
+
+# In[ ]:
+
+
+
 
