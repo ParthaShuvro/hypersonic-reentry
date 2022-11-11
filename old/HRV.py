@@ -29,12 +29,12 @@ The observation is a `ndarray` with shape `(6,)` with the values
 
     | Num | Observation           | Min                 | Max               |
     |-----|-----------------------|---------------------|-------------------|
-    | 0   | Radial distance (km)  |     6300            | 7500              |
-    | 1   | Longitude (°)         |        0            |   90              |
-    | 2   | Latitude (°)          |        0            |   90              |
-    | 3   | Velocity (m/s)        |     1000            | 7000              |
-    | 4   | Flight path angle (°) |        0            |   90              |
-    | 5   | Heading angle (°)     |        0            |   90              |
+    | 0   | Radial distance (km)  |     6380            | 6488              |
+    | 1   | Longitude (°)         |     -180            |  180              |
+    | 2   | Latitude (°)          |      -90            |   90              |
+    | 3   | Velocity (m/s)        |     1000            | 6550              |
+    | 4   | Flight path angle (°) |      -90            |   90              |
+    | 5   | Heading angle (°)     |      -90            |   90              |
 
 # Action space
 
@@ -42,7 +42,7 @@ The action is a `ndarray` with shape `(2,)` with the values
 
     | Num |     Action            | Min                 | Max               |
     |-----|-----------------------|---------------------|-------------------|
-    | 0   | Angle of attack (°)   |   -30               | 30                |
+    | 0   | Angle of attack (°)   |     0               | 30                |
     | 1   | Bank angle (°)        |   -90               | 90                |
 
 # Transition dynamics
