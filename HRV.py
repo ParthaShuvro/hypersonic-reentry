@@ -4,16 +4,12 @@
 # In[11]:
 
 
-import sys
-sys.path.append('C:\\Users\\User')
 from typing import Optional, Union
 import numpy as np
 from numpy import sin, cos, tan, exp
 import gym
 from gym import logger, spaces
 from gym.envs.classic_control import utils
-from gym.error import DependencyNotInstalled
-from gym.utils.renderer import Renderer
 from gym.envs.classic_control.Planet import Planet
 
 
