@@ -147,7 +147,7 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         #print(alpha, sigma, cL, cD)
         #aerodynamic heating
         qD = K * (rho ** 0.5) * (v ** 3)
-        qD_max = 2e6
+        qD_max = 2e3
         #dynamic pressure
         pD = 0.5 * rho * v ** 2
         pD_max = 5e5
@@ -345,86 +345,7 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         else:
             return np.array(self.state, dtype=np.float32), {}
         
-"""       
-class ActionConstraint(gym.ActionWrapper):
-    def __init__(self, env, updated_act):
-        super().__init__(env)
-        self.updated_act = updated_act
-        self.action_space = self.
-        self.act_min = np.array([-30, -90], dtype=np.float32) # min [alpha, sigma] 
-        self.act_max = np.array([30, 90], dtype=np.float32) # max [alpha, sigma]
 
-        def action(self):            
-            alpha_old = self.action_space[0]
-            sigma_old = self.action_space[1]            
-            self.action = spaces.Box(self.act_min, self.act_max, dtype=np.float32)
-            alpha = self.action[0]
-            sigma = self.action[1]
-            if (abs(alpha-alpha_old) > 5):
-                alpha = alpha_old
-            elif (abs(sigma-sigma_old) > 30):
-                sigma = sigma_old
-            elif (abs(alpha-alpha_old) < 5 and abs(sigma-sigma_old) < 30):
-                alpha = alpha
-                sigma = sigma
-            
-            self.updated_act = [alpha, sigma]
-            return self.updated_act
-        
-    
-    def aerodynamic_coefficients(self, M, alpha):
-        r, theta, phi, v, gamma, psi = self.state
-        h = (r - self.planet.radius) / self.dist_scale
-        rho, a = self.planet.atmosphere(h * self.dist_scale)
-        self.M = v * self.vel_scale / a
-        self.alpha = self.step().action[0]
-        # Returns aero coefficients CD and CL. Supports ndarray Mach numbers.
-        [cl0, cl1, cl2, cl3] = [-0.2317, 0.0513, 0.2945, -0.1028]
-        [cd0, cd1, cd2, cd3] = [0.024, 7.24e-4, 0.406, -0.323]
-        
-        cL = cl1 * self.alpha + cl2 * exp(cl3 * self.M) + cl0
-        cD = cd1 * self.alpha ** 2 + cd2 * exp(cd3 * self.M) + cd0
-        LoD = cL / cD
-        return cD, cL
-    
-    def ballistic_coefficients(self, mass=907.2, area=0.4839):
-        self.mass = mass
-        self.cD = self.aerodynamic_coefficients(M, alpha)[0]
-        self.area = area
-        
-        bc = mass/(self.cD * area)
-        return bc
-    
-        
-    
-    def action_old(self, action):
-        assert self.action_space.contains(action)
-        
-        alpha_old = action[0]
-        sigma_old = action[1]
-        if abs(alpha - alpha_old) > 0.3490:
-            alpha = alpha_old
-        if abs(sigma - sigma_old) > 0.5235:
-            sigma = sigma_old
-        
-        return alpha_old, sigma_old
-        
-       
-    def constraints(self):
-        V = self.state[3]
-        K = 9.289e-9
-        rho = self.Planet.atmosphere[0]
-        Cd, Cl = self.EntryVehicle.aerodynamic_coefficients(M, alpha)
-        D = 0.5 * rho * V **2 * S * Cd
-        L = (Cl/Cd) * D
-        #aerodynamic heating
-        Qd = K * rho ** 0.5 * V ** 3
-        #dynamic pressure
-        P_d = 0.5 * rho * V ** 2
-        #normal load
-        n_L = math.sqrt(L**2+D**2)/(self.mass*self.gravity)
-        return [[Qd, P_d, n_L]]
-        """
 # In[ ]:
 
 
