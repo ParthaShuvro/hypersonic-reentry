@@ -142,7 +142,7 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         #print(alpha, sigma, cL, cD)
         #aerodynamic heating
         qD = K * (rho ** 0.5) * (v ** 3)
-        qD_max = 2e6
+        qD_max = 2e3
         #dynamic pressure
         pD = 0.5 * rho * v ** 2
         pD_max = 5e5
