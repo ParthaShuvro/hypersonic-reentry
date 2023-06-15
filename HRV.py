@@ -528,7 +528,25 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         
     # normalization 
         #return np.array([self.state_normalized], dtype=np.float32), reward, terminated, False, {}
-
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        return_info: bool = False,
+        options: Optional[dict] = None,
+    ):
+        super().reset(seed=seed)
+        self.state = self.initial_state
+        #self.state_normalized = self.initial_state_norm #normalized 
+        self.steps_beyond_done = None
+        self.steps_beyond_terminated = None
+        self.alpha_old = 0.4363
+        self.sigma_old = -0.5236
+        
+        if not return_info:
+            return np.array(self.state, dtype=np.float32)
+        else:
+            return np.array(self.state, dtype=np.float32), {}
     
     def act(self, action):
         # clipped action rate of change
