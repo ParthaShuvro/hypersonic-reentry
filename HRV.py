@@ -516,13 +516,13 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
                 reward = -200000
                 self.steps_beyond_terminated += 1
         
-
+## save to a csv file
         df_action = pd.DataFrame(np.array([[alpha, sigma, self.steps_beyond_terminated]]))
-        df_action.to_csv('D:\\project\\results & sims\\tqc-4\\data_action-tqc-4.csv', mode='a', index=False, header=False)
+        df_action.to_csv('......', mode='a', index=False, header=False)
         df2 = pd.DataFrame(np.array([[r, theta, phi, v, gamma, psi, self.steps_beyond_terminated]]))
-        df2.to_csv('D:\\project\\results & sims\\tqc-4\\data_obs-tqc-4.csv', mode='a', index=False, header=False)
+        df2.to_csv('.......', mode='a', index=False, header=False)
         df3 = pd.DataFrame(np.array([[qD, pD, nL, self.steps_beyond_terminated]]))
-        df3.to_csv('D:\\project\\results & sims\\tqc-4\\data_constraints-tqc-4.csv', mode='a', index=False, header=False)
+        df3.to_csv('...........', mode='a', index=False, header=False)
 
         return np.array([self.state], dtype=np.float32), reward, terminated, False, {}
         
