@@ -33,12 +33,12 @@ The observation is a `ndarray` with shape `(6,)` with the values
 
     | Num | Observation           | Min                 | Max               |
     |-----|-----------------------|---------------------|-------------------|
-    | 0   | Radial distance (km)  |     6380            | 6488              |
+    | 0   | Radial distance (km)  |     6388            | 6478              |
     | 1   | Longitude (°)         |     -180            |  180              |
     | 2   | Latitude (°)          |      -90            |   90              |
-    | 3   | Velocity (m/s)        |     1000            | 6550              |
+    | 3   | Velocity (m/s)        |      999            | 7050              |
     | 4   | Flight path angle (°) |      -90            |   90              |
-    | 5   | Heading angle (°)     |      -90            |   90              |
+    | 5   | Heading angle (°)     |     -180            |  180              |
 
 # Action space
 
@@ -46,7 +46,7 @@ The action is a `ndarray` with shape `(2,)` with the values
 
     | Num |     Action            | Min                 | Max               |
     |-----|-----------------------|---------------------|-------------------|
-    | 0   | Angle of attack (°)   |     0               | 30                |
+    | 0   | Angle of attack (°)   |     5               | 30                |
     | 1   | Bank angle (°)        |   -90               | 90                |
 
 # Transition dynamics
@@ -319,13 +319,7 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
                 # DDPG ->seed(3)
                 reward = 4000 - (r-self.final_state[0])/70 - (v-self.final_state[3])/6 - \
                 abs(theta-self.final_state[1])*500- abs(phi-self.final_state[2])*1500-\
-                    nL*100 - pD/500
-                    
-                
-                    
-                reward = 45000000 - (r-self.final_state[0])*500 - (v-self.final_state[3])*1500 - \
-                    abs(theta-self.final_state[1])*1000 -abs(phi-self.final_state[2])*1000 -\
-                        nL*5000 - pD/20
+                    nL*100 - pD/50
                         
                 
                 # TD3 normalized ->seed(3)
@@ -333,11 +327,7 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
                 abs(theta-self.final_state[1])*1000- abs(phi-self.final_state[2])*2000-\
                     nL*500 - pD/50
                     
-                # TD3
-                reward = 15000 - (r-self.final_state[0])/14 - (v-self.final_state[3]) - \
-                abs(theta-self.final_state[1])*1000- abs(phi-self.final_state[2])*1500-\
-                    nL*1800 - pD/50
-                 #****   
+                # TD3 
                 reward = 15000 - (r-self.final_state[0])/14 - (v-self.final_state[3]) - \
                 abs(theta-self.final_state[1])*1000- abs(phi-self.final_state[2])*1500-\
                     nL*1600 - pD/50
@@ -556,64 +546,6 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         #sigma_norm = self.state_norm(sigma_clip, self.sigma_min, self.sigma_range)
         
         return np.array([alpha_clip, sigma_clip])
-    """
-    
-    def act(self, action):
-        #sample normalized action
-       
-        action = np.clip(action, self.act_min, self.act_max).astype(np.float32)
-        alpha_norm = action[0]
-        sigma_norm = action[1]
-        
-        # denormalize
-        alpha = self.state_denorm(alpha_norm, self.alpha_min, self.alpha_range)
-        sigma = self.state_denorm(sigma_norm, self.sigma_min, self.sigma_range)
-        
-        # constraints validation        
-        if (alpha-self.alpha_old) > 0.0175:
-            alpha_c = self.alpha_old + 0.0175
-        elif (alpha-self.alpha_old) < -0.0175:
-            alpha_c = self.alpha_old - 0.0175
-        else:
-            alpha_c = alpha
-            
-        if (sigma-self.sigma_old) > 0.1047:
-            sigma_c = self.sigma_old + 0.1047
-        elif (sigma-self.sigma_old) < -0.1047:
-            sigma_c = self.sigma_old - 0.1047
-        else:
-            sigma_c = sigma
-            
-            
-        self.alpha_old = alpha_c
-        self.sigma_old = sigma_c
-        
-        
-        alpha_norm = self.state_norm(alpha_c, self.alpha_min, self.alpha_range)
-        sigma_norm = self.state_norm(sigma_c, self.sigma_min, self.sigma_range)
-        
-        return np.array([alpha_norm, sigma_norm])
-    """
-    def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        return_info: bool = False,
-        options: Optional[dict] = None,
-    ):
-        super().reset(seed=seed)
-        self.state = self.initial_state
-        #self.state_normalized = self.initial_state_norm #normalized 
-        self.steps_beyond_done = None
-        self.steps_beyond_terminated = None
-        self.alpha_old = 0.4363
-        self.sigma_old = -0.5236
-        
-        if not return_info:
-            return np.array(self.state, dtype=np.float32)
-        else:
-            return np.array(self.state, dtype=np.float32), {} 
-        
     
     def state_norm(self, s, s_min, r):    
         # normalize between -1 to 1        
@@ -662,135 +594,6 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         self.error_old_sigma = error_sigma
         
         return np.array([alpha_new, sigma_new])
-        
-        """
-        # normalized
-        if not return_info:
-            return np.array(self.state_normalized, dtype=np.float32)
-        else:
-            return np.array(self.state_normalized, dtype=np.float32), {}   
-       
-    
-       """
-    """
-    def state_norm(self, s, s_min, r):    
-        # normalize between -1 to 1        
-        s_n = 2*(s-s_min)/r - 1            
-        return s_n
-    
-    def state_denorm(self, s_n, s_min, r):
-        s = 1/2*(r*s_n + 2*s_min + r)
-        return s
-    
-    def pid(self, action, i):
-        action = self.act(action)
-        alpha_n = action[0]
-        sigma_n = action[1]
-        
-        alpha = self.state_denorm(alpha_n, self.alpha_min, self.alpha_range)
-        sigma = self.state_denorm(sigma_n, self.sigma_min, self.sigma_range)
-        
-        data = pd.read_csv("D:\\project\\results & sim\\tqc-2\\data_action-2.csv")
-        df = pd.DataFrame(data[531136:539844], columns=["alpha", "sigma", "steps"])
-        
-        
-        alpha_r = df.at[i,'alpha']
-        sigma_r = df.at[i,'sigma']
-        
-        error_alpha = alpha_r - alpha
-        error_sigma = sigma_r - sigma
-        print(alpha_r, alpha, sigma, self.integral_error_alpha, self.error_old_alpha)
-        d_error_alpha = (error_alpha - self.error_old_alpha) / self.tau
-        d_error_sigma = (error_sigma - self.error_old_sigma) / self.tau
-    
-        self.integral_error_alpha += error_alpha * self.tau
-        self.integral_error_sigma += error_sigma * self.tau
-        
-        alpha_gain = self.kp*error_alpha + self.ki*self.integral_error_alpha \
-            + self.kd*d_error_alpha
-        sigma_gain = self.kp*error_sigma + self.ki*self.integral_error_sigma \
-            + self.kd*d_error_sigma
-        
-        alpha_new = alpha_r*(alpha_gain*alpha)/(1+alpha_gain*alpha)
-        sigma_new = sigma_r*(sigma_gain*sigma)/(1+sigma_gain*sigma)
-        self.error_old_alpha = error_alpha
-        self.error_old_sigma = error_sigma
-        
-        return np.array([alpha_new, sigma_new])
-    """ 
-    """  
-   
-    def act(self, action):
-        action = np.clip(action, self.act_min, self.act_max).astype(np.float32)
-        #print(action, action[0], action[1], self.alpha_old, self.sigma_old, (action[0]-self.alpha_old))
-        
-        if (action[0]-self.alpha_old) > 0.0175:
-            alpha = self.alpha_old + 0.0175
-        elif (action[0]-self.alpha_old) < -0.0175:
-            alpha = self.alpha_old - 0.0175
-        else:
-            alpha = action[0]
-            
-        if (action[1]-self.sigma_old) > 0.1047:
-            sigma = self.sigma_old + 0.1047
-        elif (action[1]-self.sigma_old) < -0.1047:
-            sigma = self.sigma_old - 0.1047
-        else:
-            sigma = action[1]
-            
-            
-        self.alpha_old = alpha
-        self.sigma_old = sigma
-        
-        #alpha = action[0]
-        #sigma = action[1]
-        return np.array([alpha, sigma])
-    
-class PID():
-    def __init__(self):
-        self.error_old_alpha = 0
-        self.error_old_sigma = 0
-        self.integral_error_alpha = 0
-        self.integral_error_sigma = 0
-        self.dt = 0.2
-        self.kp = 1
-        self.ki = 2
-        self.kd = 3
-    def compute(self, action, i):
-        action = HRVEnv().act(action)
-        alpha = action[0]
-        sigma = action[1]
-        
-        data = pd.read_csv("D:\\project\\results & sim\\ppo-l12\\data_action-l125.csv")
-        df = pd.DataFrame(data, columns=["alpha", "sigma", "steps"])
-        
-        
-        alpha_r = df.at[i,'alpha']
-        sigma_r = df.at[i,'sigma']
-        
-        error_alpha = alpha_r - alpha
-        error_sigma = sigma_r - sigma
-        print(alpha_r, alpha, self.integral_error_alpha, self.error_old_alpha)
-        d_error_alpha = (error_alpha - self.error_old_alpha) / self.dt
-        d_error_sigma = (error_sigma - self.error_old_sigma) / self.dt
-    
-        self.integral_error_alpha += error_alpha * self.dt
-        self.integral_error_sigma += error_sigma * self.dt
-        
-        alpha_new = self.kp*error_alpha + self.ki*self.integral_error_alpha \
-            + self.kd*d_error_alpha
-        sigma_new = self.kp*error_sigma + self.ki*self.integral_error_sigma \
-            + self.kd*d_error_sigma
-            
-        self.error_old_alpha = error_alpha
-        self.error_old_sigma = error_sigma
-        
-        return np.array([alpha_new, sigma_new])
-    
-    
-    
-    
-    """
 # In[ ]:
 
 
