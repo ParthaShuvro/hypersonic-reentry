@@ -207,7 +207,8 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         sigma = self.state_denorm(sigma_norm, self.sigma_min, self.sigma_range)
         """
         m = self.mass
-        g = self.gravity(r)
+        g = self.gravity(r) 
+        g0 = 9.80665 # gravity at mean sea level
         omega = self.planet.omega
         h = (r - self.planet.radius)
         rho, a = self.planet.atmosphere(h)
@@ -229,10 +230,10 @@ The transition dynamics being followed is according to Vinh(1981). Initially 3do
         pD = 0.5 * rho * v ** 2
         pD_max = 5e5
         
-        L = pD * self.area * abs(cL) # lift force
+        L = pD * self.area * cL # lift force
         D = pD * self.area * cD # drag force
         #normal load
-        nL = np.sqrt(L**2 + D**2) / (m * g)
+        nL = np.sqrt(L**2 + D**2) / (m * g0)
         nL_max = 10
         
         
